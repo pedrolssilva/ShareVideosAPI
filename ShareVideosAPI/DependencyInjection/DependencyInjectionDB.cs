@@ -12,8 +12,8 @@ namespace ShareVideosAPI.DependencyInjection
             string connectionString = configuration.GetConnectionString("Server");
 
             services.AddDbContext<DbContextPostgre>(options => options.UseNpgsql(connectionString));
-            services.AddScoped<IVideoRepository, VideoRepository>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<IVideoRepository, VideoRepository>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
             return services;
         }
     }
