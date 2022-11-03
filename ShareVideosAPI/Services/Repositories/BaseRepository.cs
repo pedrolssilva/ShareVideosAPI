@@ -52,12 +52,13 @@ namespace ShareVideosAPI.Services.Repositories
             return _dbSet.Find(keyValues);
         }
 
-        public virtual void Insert(TEntity entity)
+        public virtual TEntity? Insert(TEntity entity)
         {
-            _dbSet.Add(entity);
+            TEntity? createdEntity = _dbSet.Add(entity).Entity;
             _context.SaveChanges();
+            return createdEntity;
         }
-
+         
         public virtual void Update(TEntity entityToUpdate)
         {
             _dbSet.Update(entityToUpdate);

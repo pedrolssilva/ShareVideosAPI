@@ -1,6 +1,8 @@
-﻿namespace ShareVideosAPI.Services.Repositories.Videos
+﻿using ShareVideosAPI.Services.Entities;
+
+namespace ShareVideosAPI.Services.Repositories.Videos
 {
-    public interface IVideoRepository
+    public interface IVideoRepository : IBaseRepository<Video>
     {
     }
 }

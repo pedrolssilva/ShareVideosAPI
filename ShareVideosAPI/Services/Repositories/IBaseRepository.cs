@@ -12,7 +12,7 @@ namespace ShareVideosAPI.Services.Repositories
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
             string includeProperties = "");
         TEntity? GetByKey(params object?[]? keyValues);
-        void Insert(TEntity entity);
+        TEntity? Insert(TEntity entity);
         void Update(TEntity entityToUpdate);
         TEntity? Delete(params object?[]? keyValues);
         void Delete(TEntity entityToDelete);
