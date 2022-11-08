@@ -66,7 +66,7 @@ namespace ShareVideosAPI.Controllers
                 Url = createVideo.Url
             });
 
-            if(video is null)
+            if (video is null)
             {
                 return StatusCode(500, "Something went wrong in creation of the video.");
             }
@@ -88,6 +88,26 @@ namespace ShareVideosAPI.Controllers
         {
             var video = _unitOfWork.VideoRepository.Update(
                 id, videoInput.Title, videoInput.Description, videoInput.Url);
+
+            if (video is null)
+            {
+                return NotFound(new { error = "Video not found" });
+            }
+
+            var result = _mapper.Map<Video, VideoModel>(video);
+            return Ok(result);
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        [ValidateModelStateCustom]
+        [SwaggerOperation(summary: " Delete a video", description: "")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Return deleted video", typeof(VideoModel))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Video not found")]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal ServerError")]
+        public IActionResult Delete(int id)
+        {
+            var video = _unitOfWork.VideoRepository.Delete(id);
 
             if (video is null)
             {
