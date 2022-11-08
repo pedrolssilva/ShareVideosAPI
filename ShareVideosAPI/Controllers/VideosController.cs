@@ -57,5 +57,23 @@ namespace ShareVideosAPI.Controllers
             var result = _mapper.Map<Video, VideoModel>(video);
             return Ok(result);
         }
+
+        [HttpGet]
+        [Route("{id}")]
+        [SwaggerOperation(summary: " Get Video by Id", description: "")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Return a video", typeof(VideoModel))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Video not found")]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal ServerError")]
+        public IActionResult Get(int id)
+        {
+            var video = _unitOfWork.VideoRepository.GetByKey(id);
+            if( video is null)
+            {
+                return NotFound(new {error= "Video not found" });
+            }
+
+            var result = _mapper.Map<Video, VideoModel>(video);
+            return Ok(result);
+        }
     }
 }
