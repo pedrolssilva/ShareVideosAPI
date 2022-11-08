@@ -34,6 +34,23 @@ namespace ShareVideosAPI.Controllers
             return Ok(result);
         }
 
+        [HttpGet]
+        [Route("{id}")]
+        [SwaggerOperation(summary: " Get Video by Id", description: "")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Return a video", typeof(VideoModel))]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal ServerError")]
+        public IActionResult Get(int id)
+        {
+            var video = _unitOfWork.VideoRepository.GetByKey(id);
+            if (video is null)
+            {
+                return NotFound(new { error = "Video not found" });
+            }
+
+            var result = _mapper.Map<Video, VideoModel>(video);
+            return Ok(result);
+        }
+
         [HttpPost]
         [ValidateModelStateCustom]
         [SwaggerOperation(summary: " Create a new video", description: "")]
@@ -58,18 +75,23 @@ namespace ShareVideosAPI.Controllers
             return Ok(result);
         }
 
-        [HttpGet]
+
+        [HttpPut]
         [Route("{id}")]
-        [SwaggerOperation(summary: " Get Video by Id", description: "")]
-        [SwaggerResponse(StatusCodes.Status200OK, "Return a video", typeof(VideoModel))]
+        [ValidateModelStateCustom]
+        [SwaggerOperation(summary: " Update a video", description: "")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Return updated video", typeof(VideoModel))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Fields required", type: typeof(FieldValidatorViewModelOutput))]
         [SwaggerResponse(StatusCodes.Status404NotFound, "Video not found")]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal ServerError")]
-        public IActionResult Get(int id)
+        public IActionResult Update(int id, UpdateVideoInput videoInput)
         {
-            var video = _unitOfWork.VideoRepository.GetByKey(id);
-            if( video is null)
+            var video = _unitOfWork.VideoRepository.Update(
+                id, videoInput.Title, videoInput.Description, videoInput.Url);
+
+            if (video is null)
             {
-                return NotFound(new {error= "Video not found" });
+                return NotFound(new { error = "Video not found" });
             }
 
             var result = _mapper.Map<Video, VideoModel>(video);

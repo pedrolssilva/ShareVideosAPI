@@ -15,5 +15,22 @@ namespace ShareVideosAPI.Services.Repositories.Videos
         public VideoRepository(DbContextPostgre context) : base(context)
         {
         }
+
+        public Video? Update(int id, string? title, string? description, string? url)
+        {
+            Video? foundVideo = base.GetByKey(id);
+            if (foundVideo == null)
+            {
+                return null;
+            }
+
+            foundVideo.Title = !string.IsNullOrEmpty(title) ? title : foundVideo.Title;
+            foundVideo.Description = !string.IsNullOrEmpty(description) ? description : foundVideo.Description;
+            foundVideo.Url = !string.IsNullOrEmpty(url) ? url : foundVideo.Url;
+
+            base.Update(foundVideo);
+
+            return foundVideo;
+        }
     }
 }
