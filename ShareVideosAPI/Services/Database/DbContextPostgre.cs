@@ -15,6 +15,7 @@ namespace ShareVideosAPIatabase
         /// Videos table
         /// </summary>
         public DbSet<Video> Videos => Set<Video>();
+        public DbSet<Category> Categories => Set<Category>();
 
         /// <summary>
         /// Create the database context with PostgreDB
@@ -39,6 +40,7 @@ namespace ShareVideosAPIatabase
             //modelBuilder.HasPostgresEnum<EnumType>();
 
             modelBuilder.ApplyConfiguration(new VideoConfiguration());
+            modelBuilder.ApplyConfiguration(new CategoryConfiguration());
         }
 
         public override int SaveChanges()
