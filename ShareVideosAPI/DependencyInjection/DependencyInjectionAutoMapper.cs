@@ -9,6 +9,7 @@ namespace ShareVideosAPI.DependencyInjection
             services.AddAutoMapper(cfg =>
             {
                 cfg.AddProfile<VideoProfile>();
+                cfg.AddProfile<CategoryProfile>();
             });
             return services;
         }
