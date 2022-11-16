@@ -24,6 +24,34 @@ namespace ShareVideosAPI.Controllers
             _mapper = mapper;
         }
 
+        [HttpGet]
+        [SwaggerOperation(summary: " List Categories", description: "")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Return a list of Categories", typeof(List<CategoryModel>))]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal ServerError")]
+        public IActionResult Index()
+        {
+            var Categories = _unitOfWork.CategoryRepository.List();
+            var result = _mapper.Map<List<Category>, List<CategoryModel>>(Categories);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("{id}")]
+        [SwaggerOperation(summary: " Get Category by Id", description: "")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Return a category", typeof(CategoryModel))]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal ServerError")]
+        public IActionResult Get(int id)
+        {
+            var category = _unitOfWork.CategoryRepository.GetByKey(id);
+            if (category is null)
+            {
+                return NotFound(new { error = "Category not found" });
+            }
+
+            var result = _mapper.Map<Category, CategoryModel>(category);
+            return Ok(result);
+        }
+
         [HttpPost]
         [ValidateModelStateCustom]
         [SwaggerOperation(summary: " Create a new category", description: "")]
