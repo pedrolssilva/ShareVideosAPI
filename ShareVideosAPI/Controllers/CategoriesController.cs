@@ -74,5 +74,47 @@ namespace ShareVideosAPI.Controllers
             var result = _mapper.Map<Category, CategoryModel>(category);
             return Ok(result);
         }
+
+        [HttpPut]
+        [Route("{id}")]
+        [ValidateModelStateCustom]
+        [SwaggerOperation(summary: " Update a video", description: "")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Return updated video", typeof(VideoModel))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Fields required", type: typeof(FieldValidatorViewModelOutput))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Video not found")]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal ServerError")]
+        public IActionResult Update(int id, UpdateVideoInput videoInput)
+        {
+            var video = _unitOfWork.VideoRepository.Update(
+                id, videoInput.Title, videoInput.Description, videoInput.Url);
+
+            if (video is null)
+            {
+                return NotFound(new { error = "Video not found" });
+            }
+
+            var result = _mapper.Map<Video, VideoModel>(video);
+            return Ok(result);
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        [ValidateModelStateCustom]
+        [SwaggerOperation(summary: " Delete a category", description: "")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Return deleted category", typeof(CategoryModel))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Category not found")]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal ServerError")]
+        public IActionResult Delete(int id)
+        {
+            var Category = _unitOfWork.CategoryRepository.Delete(id);
+
+            if (Category is null)
+            {
+                return NotFound(new { error = "Category not found" });
+            }
+
+            var result = _mapper.Map<Category, CategoryModel>(Category);
+            return Ok(result);
+        }
     }
 }
