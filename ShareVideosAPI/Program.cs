@@ -5,7 +5,9 @@ using Npgsql;
 using ShareVideosAPI.DependencyInjection;
 using ShareVideosAPI.Middlewares.Errors;
 using ShareVideosAPI.Middlewares.Filters;
+using ShareVideosAPI.Services.Database.Seeds;
 using ShareVideosAPIatabase;
+using System;
 using System.Reflection;
 using System.Text.Json.Serialization;
 
@@ -60,6 +62,13 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+
+if (!app.Environment.IsProduction())
+{
+    using var scope = app.Services.CreateScope();
+    var seedControl = scope.ServiceProvider.GetRequiredService<ISeedData>();
+    seedControl.ApplySeeds();
 }
 
 app.UseHttpsRedirection();
