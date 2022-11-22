@@ -25,6 +25,9 @@ namespace ShareVideosAPI.Services.Database.Configuraion
 
             builder.ToTable(t => t.HasCheckConstraint("CHK_Category_ColorHas7Chars", "(length(\"Color\") > 6)"));
 
+            builder
+                .HasMany(c => c.Videos)
+                .WithOne(v => v.Category);
         }
     }
 }
