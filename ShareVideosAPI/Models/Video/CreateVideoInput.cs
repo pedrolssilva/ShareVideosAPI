@@ -24,5 +24,8 @@ namespace ShareVideosAPI.Models.Video
         /// </summary>
         [Url(ErrorMessage = "Url format is invalid")]
         public string? Url { get; set; }
+
+        [Range(1, uint.MaxValue)]
+        public uint? CategoryId { get; set; } = 1;
     }
 }
