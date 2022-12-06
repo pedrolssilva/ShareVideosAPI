@@ -6,6 +6,7 @@ using ShareVideosAPI.Models.Video;
 using ShareVideosAPI.Services.Database;
 using ShareVideosAPI.Services.Entities;
 using Swashbuckle.AspNetCore.Annotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace ShareVideosAPI.Controllers
 {
@@ -48,6 +49,24 @@ namespace ShareVideosAPI.Controllers
             }
 
             var result = _mapper.Map<Video, VideoModel>(video);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("GetByName")]
+        [SwaggerOperation(summary: "Get videos by searching name matched", description: "")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Return a list of matched searched videos", typeof(IEnumerable<VideoModel>))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Video not found")]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal ServerError")]
+        public IActionResult GetByName([Required] string search)
+        {
+            var video = _unitOfWork.VideoRepository.GetByNameSearch(search);
+            if (video is null)
+            {
+                return NotFound(new { error = "Any result was found for this search" });
+            }
+
+            var result = _mapper.Map<IEnumerable<Video>, IEnumerable<VideoModel>>(video);
             return Ok(result);
         }
 

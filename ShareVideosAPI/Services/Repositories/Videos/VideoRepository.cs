@@ -1,4 +1,5 @@
-﻿using ShareVideosAPI.Services.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using ShareVideosAPI.Services.Entities;
 using ShareVideosAPIatabase;
 
 namespace ShareVideosAPI.Services.Repositories.Videos
@@ -32,5 +33,14 @@ namespace ShareVideosAPI.Services.Repositories.Videos
 
             return foundVideo;
         }
+
+        public IEnumerable<Video>? GetByNameSearch(string search)
+        {
+            var videos = _context.Videos
+                            .Where(video => EF.Functions.Like(video.Title!, $"%{search}%"))
+                            .ToList();
+            return videos;
+        }
+       
     }
 }
