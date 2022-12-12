@@ -52,6 +52,24 @@ namespace ShareVideosAPI.Controllers
             return Ok(result);
         }
 
+        [HttpGet]
+        [Route("{id}/videos")]
+        [SwaggerOperation(summary: " Get videos by category Id", description: "")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Return a list of videos", typeof(ICollection<VideoModel>))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Category not found")]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal ServerError")]
+        public IActionResult GetVideoByCategoryId(int id)
+        {
+            var videos = _unitOfWork.CategoryRepository.GetVideosByCategoryId(id);
+            if (videos is null)
+            {
+                return NotFound(new { error = "Category not found" });
+            }
+
+            var result = _mapper.Map<ICollection<Video>, ICollection<VideoModel>>(videos);
+            return Ok(result);
+        }
+
         [HttpPost]
         [ValidateModelStateCustom]
         [SwaggerOperation(summary: " Create a new category", description: "")]
