@@ -16,6 +16,6 @@ namespace ShareVideosAPI.Services.Entities
         [Url(ErrorMessage ="url must to have a valid format")]
         public string? Url { get; set; }
 
-        public Category Category { get; set; }
+        public Category? Category { get; set; }
     }
 }
